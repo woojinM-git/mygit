@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -34,6 +36,11 @@ body {
     -ms-text-size-adjust: 100%;
     line-height: 1;
 }
+.animated.on {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+}
 .inner {
     max-width: 1440px;
     margin: auto;
@@ -54,11 +61,21 @@ body {
     color: #555;
     word-break: keep-all;
 }
+/* logo 부분이 부자연스러워 수정 예정 */
+.header_top {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .header {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: white;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
     width: 100%;
     z-index: 1000;
 }
@@ -99,13 +116,49 @@ body {
     display: block;
     font-size: 21px;
     line-height: 1em;
-    width: 180px;
+    width: 150px;
     text-align: center;
     position: relative;
 }
+
+.main_img_wrap {
+    position: relative;
+    display: block;
+}
+.main_img-area {
+    position: relative;
+    height: 937px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
 .main_img {
+    width: 1654px;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    z-index: 997;
+    opacity: 1;
+}
+.main_img > img {
     width: 100%;
-    height: 960px;
+    height: 100%;
+    object-fit: contain; /* ✅ 늘리지 않고, 비율 유지하며 맞춤 */
+    margin: auto;
+}
+.main_img_text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 0 0 8px rgba(0,0,0,0.5);
+    z-index: 998;
 }
 .main_business {
     padding-top: 135px;
@@ -123,12 +176,175 @@ body {
     justify-content: space-between;
     margin-top: 85px;
 }
+.main_business .business_list > a {
+    width: 24%;
+    height: 540px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    position: relative;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: gray;
+}
+.list_wrap {
+    padding: 45px 25px;
+    width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+.main_tit {
+    font-size: 60px;
+    position: relative;
+    line-height: 1em;
+    font-weight: bold;
+    padding-left: 50px;
+    margin: 0;
+}
+.main_tit::before {
+    content: "";
+    height: 9px;
+    width: 34px;
+    background-color: #0154a6;
+    position: absolute;
+    top: 8px;
+    left: 0px;
+    -webkit-transform: skew(-45deg);
+    transform: skew(-45deg);
+}
+.main_business .business_list .para01 {
+    margin-top: 35px;
+    font-size: 14px;
+    color: #fff;
+    line-height: 1em;
+    position: relative;
+    z-index: 2;
+}
+.main_business .business_list .para02 {
+    font-size: 30px;
+    color: #fff;
+    font-weight: bold;
+    margin-top: 12px;
+    line-height: 1em;
+    position: relative;
+    z-index: 2;
+}
+.main_business .business_list .para03 {
+    margin-top: 25px;
+    line-height: 1.4em;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    position: relative;
+    z-index: 2;
+    word-break: keep-all;
+}
 .main_portfolio {
     width: 100%;
     height: 853px;
     padding-top: 145px;
     padding-bottom: 100px;
     background-color: #f5f5f5;
+}
+.more-style01 {
+    position: absolute;
+    top: 106px;
+    right: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.more-style01::before {
+    content: "";
+    width: 145px;
+    height: 1px;
+    background-color: #bcbcbc;
+    position: absolute;
+    right: 200px;
+    top: 25px;
+}
+.more-style01 > a {
+    margin-left: 215px;
+}
+.btn-style01 {
+    border: 1px solid #0154a6;
+    min-width: 160px;
+    height: 50px;
+    line-height: 48px;
+    display: block;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.btn-style01::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: #0154a6;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    -webkit-transition: all ease .5s;
+    transition: all ease .5s;
+    z-index: 1;
+}
+.btn-style01:hover::before {
+    top: 0;
+    color: white;
+}
+.btn-style01:hover p {
+    color: white;
+}
+.btn-style01 p {
+    color: #0154a6;
+    font-size: 16px;
+    font-weight: 500;
+    z-index: 2;
+    position: relative;
+    -webkit-transition: all ease .5s;
+    transition: all ease .5s;
+}
+.main_portfolio .portfolio_list {
+    margin-top: 80px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.main_portfolio .portfolio_list .slick-prev {
+    position: absolute;
+    width: 20px;
+    height: 36px;
+    font-size: 0;
+    background-image: url(/image/main/portfolio_prev.png);
+    top: 45%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    left: 4%;
+    z-index: 1;
 }
 .footer {
     background-color: #f5f5f5;
