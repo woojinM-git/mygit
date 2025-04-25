@@ -36,6 +36,24 @@ body {
     -ms-text-size-adjust: 100%;
     line-height: 1;
 }
+img {
+    display: block;
+}
+img, fieldset {
+    border: none;
+    vertical-align: top;
+}
+button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    overflow: visible;
+    white-space: nowrap;
+    font-size: 16px;
+    font-family: 'Hyundai', 'Noto Sans KR', sans-serif;
+}
 .animated.on {
     -webkit-transform: translateY(0);
     transform: translateY(0);
@@ -347,8 +365,9 @@ body {
     z-index: 1;
 }
 .footer {
-    background-color: #f5f5f5;
+    background-color: #232323;
     padding-bottom: 150px;
+    width: 100%
 }
 .footer .footer_inner {
     padding-top: 80px;
@@ -361,9 +380,71 @@ body {
     -webkit-box-align: start;
     -ms-flex-align: start;
     align-items: flex-start;
+    width: 1427px;
+
 }
 .footer .footer_inner .p {
     position: relative;
     padding-right: 15px;
     margin-right: 14px;
+}
+.footer .footer_logo {
+    margin-right: 110px;
+}
+.footer .footer_logo .footer_logo_inner {
+    width: 290px;
+    height: 60px;
+}
+.footer .footer_info {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    position: relative;
+}
+.footer .footer_info .info_link {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+.footer .footer_info .info_link > a {
+    position: relative;
+    padding-right: 15px;
+    margin-right: 14px;
+    color: #c4c4c4;
+}
+.footer .footer_info .info_addr {
+    color: #c4c4c4;
+    margin-top: 25px;
+    line-height: 1.6em;
+}
+.footer .footer_info .info_addr .hasBorder {
+    position: relative;
+    padding-right: 15px;
+    margin-right: 14px;
+}
+.footer .footer_info .info_copy {
+    color: #7f7f7f;
+    margin-top: 30px;
+}
+.footer .footer_info .info_sns {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-top: 40px;
+}
+.footer .footer_info .info_sns > a {
+    display: block;
+    margin-right: 18px;
+}
+.footer .footer_top-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+.footer .footer_top-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
 }
