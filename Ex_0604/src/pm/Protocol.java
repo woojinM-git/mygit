@@ -6,6 +6,8 @@ public class Protocol implements Serializable{
 	int cmd; // 1:접속, 2:채팅, 3:종료, 4:방만들기, 5:방나가기. . .
 	String msg;
 	
+	int index;
+	
 	String[] user_names; // 대기자 명단
 	String[] room_names; // 방 제목들
 	

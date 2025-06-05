@@ -30,10 +30,11 @@ public class ChatServer {
 	};
 	
 	ArrayList<CopyClient> u_list; // 대기자들
-//	ArrayList<ChatRoom> r_list; // 방 목록
+	ArrayList<ChatRoom> r_list; // 방 목록
 	
 	public ChatServer() {
 		u_list = new ArrayList<CopyClient>();
+		r_list = new ArrayList<ChatRoom>();
 		try {
 			ss = new ServerSocket(5555); // 서버 주소 *****************
 			System.out.println("서버 시작!");
@@ -46,6 +47,13 @@ public class ChatServer {
 	
 	public void removeClient(CopyClient cc) {
 		u_list.remove(cc);
+		
+		// 대기실 명단과 방 목록을 갱신하도록 프로토콜 작업
+		Protocol p = new Protocol();
+		p.setCmd(1);
+		p.setUser_names(getNames()); // 배열형태로 저장
+		p.setRoom_names(getRoomNames()); // 방 목록 수집
+		sendProtocol(p); // 접속자 모두에게 보냄
 	}
 	
 	// 대기자 모두에게 전달하는 기능
@@ -60,6 +68,18 @@ public class ChatServer {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	// 방 목록을 수집하여 반환하는 기능
+	public String[] getRoomNames() {
+		// ArrayList에 있는 요소들에게 이름을 받아서 배열화 시킨다.
+		String[] names = new String[r_list.size()];
+		int i = 0;
+		for(ChatRoom cr : r_list) {
+			// 클라이언트의 복사본을 하나씩 얻어낸다.
+			names[i++] = cr.roomName;
+		}
+		return names;
 	}
 	
 	// 대기실 명단을 수집하여 반환하는 기능
@@ -78,6 +98,18 @@ public class ChatServer {
 		// 프로그램 시작
 		new ChatServer();
 
+	}
+	
+	public void addClient(CopyClient cc) {
+		u_list.add(cc);
+		
+		// 대기실 명단과 방 목록을 갱신하도록 프로토콜 작업
+		Protocol p = new Protocol();
+		p.setCmd(1);
+		p.setUser_names(getNames()); // 배열형태로 저장
+		p.setRoom_names(getRoomNames()); // 방 목록 수집
+		
+		sendProtocol(p); // 접속자 모두에게 보냄
 	}
 
 }

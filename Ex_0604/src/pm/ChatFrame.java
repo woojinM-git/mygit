@@ -4,10 +4,13 @@
  */
 package pm;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ObjectInputStream;
@@ -15,7 +18,14 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  *
@@ -42,36 +52,52 @@ public class ChatFrame extends javax.swing.JFrame {
 					case 1: // 어떤 누군가가 접속했을 때 수행
 						// 명단을 받아서 user_list라는 JList에 넣어준다.
 						user_list.setListData(p.getUser_names());
+						room_list.setListData(p.getRoom_names());
+						break;
+					case 2: 
+						ta.append(p.getMsg());
+						ta.append("\r\n");
 						break;
 					case 3:
-						p.setCmd(1);
 						break bk;
+					case 4:
+						// 내가 방을 만들고 다시 4번 프로토콜을 받는다.
+						// 명단과 입장메세지도 같이 받아 화면에 표현한다.
+						join_list.setListData(p.getUser_names());
+						ta.append(p.getMsg());
+						card.show(getContentPane(), "chatRoom");
+						break;
+					case 5:
+						user_list.setListData(p.getUser_names());
+						room_list.setListData(p.getRoom_names());
+						card.show(getContentPane(), "roomList");
+						break;
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			} // while end
-			try {
-				if(in != null)
-					in.close();
-				if(out != null)
-					out.close();
-				if(s != null)
-					s.close();
-				System.exit(0);
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
+			closed();
+			
+			System.exit(0);
+
 		}
     	
     };
+    
+    // 채팅화면 필요한 객체
+    JPanel card3, card3_e, card3_s;
+    JButton out_bt, send_bt;
+    JTextArea ta;
+    JTextField input_tf;
+    JList<String> join_list;
     
     public ChatFrame() {
         initComponents(); // 화면 구성
         setVisible(true); // 화면 보여주기
         
         // 이벤트 감지자 등록
-        addWindowListener(new WindowAdapter() {
+        addWindowListener(new WindowAdapter() { // 창의 X 버튼
 
         	@Override
 			public void windowClosing(WindowEvent e) {
@@ -81,9 +107,10 @@ public class ChatFrame extends javax.swing.JFrame {
 				else {
 					// 프로토콜 생성, cmd에 3 저장 후 서버로 프로토콜 전송
 					Protocol p = new Protocol();
-					p.cmd = 3;
+					p.setCmd(3);
 					try {
 						out.writeObject(p); // 접속해제를 위한 프로토콜 보내기
+						out.flush();
 					} catch (Exception e2) {
 						e2.printStackTrace();
 					}
@@ -92,7 +119,7 @@ public class ChatFrame extends javax.swing.JFrame {
 		
         });
         
-        jButton1.addActionListener(new ActionListener() {
+        jButton1.addActionListener(new ActionListener() { // 카드1 로그인 버튼
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -130,7 +157,7 @@ public class ChatFrame extends javax.swing.JFrame {
 			}
 		});
         
-        jButton5.addActionListener(new ActionListener() {
+        jButton5.addActionListener(new ActionListener() { // 종료 버튼
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -143,6 +170,124 @@ public class ChatFrame extends javax.swing.JFrame {
 				}
 			}
 		});
+        
+        jButton2.addActionListener(new ActionListener() { // 방 만들기 버튼
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String str = JOptionPane.showInputDialog(ChatFrame.this, "방 제목을 입력하세요.");
+				if(str != null && str.trim().length() > 0) { // 방 제목을 1자라도 입력한 경우
+					Protocol p = new Protocol();
+					p.setCmd(4);
+					p.setMsg(str); // 방 제목 담기
+					
+					try {
+						out.writeObject(p);
+						out.flush();
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+				}
+				
+			}
+		});
+        
+        jButton4.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// 방 참가하기 버튼을 눌렀을때 방에 참가하는 기능
+				String str = ta.getText();
+				if(str != null) {
+					Protocol p = new Protocol();
+					p.setCmd(6);
+					p.setMsg(str);
+					
+					try {
+						out.writeObject(p);
+						out.flush();
+					} catch (Exception e2) {
+						// TODO: handle exception
+					}
+				}
+			}
+		});
+        
+        out_bt.addActionListener(new ActionListener() { // 방 나가기 버튼
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// 방의 명단에서 나를 제외하고 화면을 card2로 전환, card2의 대기실에 나를 추가
+				Protocol p = new Protocol();
+				p.setCmd(5);
+				try {
+					out.writeObject(p);
+					out.flush();
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+		});
+        
+        send_bt.addActionListener(new ActionListener() { // 대화내용 보내기 버튼
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// 보내기 버튼을 눌렀을 때 tf의 문장을 가져와 출력
+				try {
+					Protocol p = new Protocol();
+					p.cmd = 2;
+					p.msg = input_tf.getText();
+					out.writeObject(p);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+        
+        room_list.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int cnt = e.getClickCount();
+				if(cnt == 2) { // room_list에서 더블클릭했는지?
+					
+				join();
+				}
+			}
+        	
+        });
+        
+    }// 생성자의 끝
+    public void join() {
+    	// 선택된 index값을 얻어내자
+    	int idx = room_list.getSelectedIndex();
+    	
+    	// 방 참여를 위한 프로토콜 만들기
+    	Protocol p = new Protocol();
+    	p.setCmd(6);
+    	p.index = idx;
+    	
+    	try {
+			out.writeObject(p);
+			out.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+    
+    
+    private void closed() {
+    		try {
+    			if(out != null) 
+    				out.close();
+    			if(in != null)
+    				in.close();
+    			if(s != null)
+    				s.close();
+    		}catch(Exception e) {
+    			e.printStackTrace();
+    		}
     }
 
     /**
@@ -246,6 +391,27 @@ public class ChatFrame extends javax.swing.JFrame {
 
         getContentPane().add(card2, "roomList");
 
+        // 채팅화면 구성 ----------------------------------------------------------
+        card3 = new JPanel(new BorderLayout());
+        card3_e = new JPanel(new BorderLayout());
+        card3_s = new JPanel(new BorderLayout());
+        
+        card3.add(new JScrollPane(ta = new JTextArea()));
+        ta.setEditable(false); // 비활성화 (편집불가능)
+        
+        card3_e.add(new JLabel("[참여자]"), BorderLayout.NORTH);
+        card3_e.add(new JScrollPane(join_list = new JList<String>()));
+        card3_e.add(out_bt = new JButton("방 나가기"), BorderLayout.SOUTH);
+        card3.add(card3_e, BorderLayout.EAST);
+        
+        card3_s.add(input_tf = new JTextField());
+        card3_s.add(send_bt = new JButton("보내기"), BorderLayout.EAST);
+        card3.add(card3_s, BorderLayout.SOUTH);
+        
+        // card3를 현재창에 "chatRoom"이라는 이름으로 추가
+        getContentPane().add(card3, "chatRoom");
+        // -----------------------------------------------------------------------
+        
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
