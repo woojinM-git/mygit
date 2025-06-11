@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 주석
+	자동차 정보를 xml로 표현하자
+	(모델명, 제조사, 가격, . . .)
+ -->
+ <root>
+ 	<car>
+ 		<name>A123</name>
+ 		<com>테슬라</com>
+ 		<price>1000원</price>
+ 	</car>
+ 	<car>
+ 		<name>B456</name>
+ 		<com>현대</com>
+ 		<price>2000원</price>
+ 	</car>
+ 	<car>
+ 		<name>C789</name>
+ 		<com>기아</com>
+ 		<price>5000원</price>
+ 	</car>
+ </root>
