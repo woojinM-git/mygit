@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Computer [
+	<!ELEMENT Computer (CPU, VGA?, RAM*, SSD+)>
+	<!ELEMENT CPU (#PCDATA)>
+	<!ELEMENT VGA (#PCDATA)>
+	<!ELEMENT RAM (#PCDATA)>
+	<!ELEMENT SSD (#PCDATA)>
+]>
+<Computer>
+	<CPU>라이젠8500</CPU>
+	<VGA>지포스7080</VGA>
+	<RAM>64G</RAM>
+	<SSD>2T</SSD>
+</Computer>
